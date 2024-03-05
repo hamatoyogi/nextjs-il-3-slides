@@ -4,17 +4,12 @@ background: https://source.unsplash.com/collection/94734566/1920x1080
 class: text-center
 highlighter: shiki
 lineNumbers: false
-info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
 drawings:
   persist: false
 defaults:
   layout: center
 transition: slide-left
-title: Welcome to Slidev
+title: Welcome to Next.js IL 3!
 mdc: true
 monaco: true
 monacoTypesSource: local # or cdn or none
@@ -361,7 +356,7 @@ export async function send() {
 
 ---
 
-![Local Image](/bleeding-edge.jpeg)
+![Local Image](/bleeding-edge-2.webp)
 
 
 ---
@@ -372,7 +367,6 @@ transition: fade-out
 # <a target="_blank" href="http://localhost:3000/use-optimistic">useOptimistic()</a>
 
 ## when using server actions
-
 
 ---
 
@@ -530,13 +524,53 @@ export default function Page() {
 
 # Ignoring Request Information in Server Components
 
-## Not utilizing request-specific information like headers or cookies in server components.
+---
 
-### Use built-in functionalities to access request information for more dynamic responses.
+````md magic-move
+```tsx
+// app/page.tsx
+
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  return <h1>My Page params {searchParams.hello}</h1>;
+}
+```
+
+```tsx
+// app/page.tsx
+
+import { headers } from 'next/headers'
+  export default function Page() {
+  const headersList = headers()
+  const referer = headersList.get('referer')
+ 
+  return <div>Referer: {referer}</div>
+}
+```
+```tsx
+// app/page.tsx
+
+import { cookies } from 'next/headers'
+ 
+export default function Page() {
+  const cookieStore = cookies()
+  const theme = cookieStore.get('theme')
+  return '...'
+}
+```
+````
+
 
 ---
 
 # Context Providers and Component Weaving
+
+---
 
 ## Confusion over where to place context providers and how server and client components interleave.
 
