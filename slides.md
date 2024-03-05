@@ -25,13 +25,35 @@ layout: cover
 # Fixing common mistakes in Next.js app router
 
 ---
- src: ./2.md
+transition: fade-out
+layout: center
 ---
 
+# Misusing Route Handlers
+
+
 
 ---
-src: ./3.md
+transition: fade-out
 ---
+
+## Avoid unnecessary API calls in RSCs.
+
+```ts
+
+// app/api/data/route.ts
+
+export async function GET(request: Request) {
+  return Response.json({ data: 'Next.js' });
+}
+```
+
+<!--
+Remove?
+
+make title?
+-->
+
 
 ---
 
@@ -174,15 +196,20 @@ export async function GET() {
 
 ### <v-click at="3">Route handlers are cached by default, affecting dynamic data fetching.</v-click>
 
-<!-- 
-Show what happens locally vs prod
- -->
 
 ---
-layout : center
+layout: center
 ---
 
 ### Understand local vs. production behavior and use dynamic fetching techniques when necessary.
+
+---
+layout: center
+---
+
+## Workaround
+
+
 
 ---
 layout: cover
