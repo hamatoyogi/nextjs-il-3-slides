@@ -309,9 +309,70 @@ layout: cover
 
 ---
 
-## Misconception that client components require separate route handlers.
+## <span v-click.hide at="1"> Client components don't need separate route handlers.</span>
+## <span v-click at="1">Use server actions for form submissions and interactions in client components.</span>
 
-### Use server actions for form submissions and interactions in client components.
+<div style="margin-bottom: 2rem;"/>
+
+````md magic-move
+```tsx
+'use client';
+
+export default function Page() {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log('submit');
+  };
+  return (
+    <main>
+      <h2>Form</h2>
+      <form onSubmit={onSubmit}>
+        <button type="submit">Submit</button>
+      </form>
+    </main>
+  );
+}
+```
+```tsx
+'use client'
+
+import { send } from './actions';
+
+export default function Page() {
+  return (
+    <main>
+      <h2>Form</h2>
+      <form action={send}>
+        <button type="submit">Submit</button>
+      </form>
+    </main>
+  );
+}
+
+// actions.ts
+
+'use server';
+
+export async function send() {
+  console.log('sending from server!');
+}
+```
+````
+
+---
+
+![Local Image](/bleeding-edge.jpeg)
+
+
+---
+class: text-center
+---
+
+# <a target="_blank" href="http://localhost:3000/use-optimistic">useOptimistic()</a>
+
+## when using server actions
+
+
 
 ---
 
