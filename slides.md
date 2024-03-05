@@ -39,8 +39,12 @@ transition: fade-out
 
 ## Avoid unnecessary API calls in RSCs.
 
-```ts
 
+---
+
+## You might have something like this 👇🏽
+
+```ts {|4}
 // app/api/data/route.ts
 
 export async function GET(request: Request) {
@@ -48,18 +52,9 @@ export async function GET(request: Request) {
 }
 ```
 
-<!--
-Remove?
+```tsx {|4}
+// app/page.tsx
 
-make title?
--->
-
-
----
-
-## You might have something like this 👇🏽
-
-```tsx {|2}
 export default async function Home() {
   let res = await fetch('http://localhost:3000/api/data');
   let data = await res.json();
@@ -112,9 +107,6 @@ class: why-not
 
 # There's a better way!
 
-
-<!-- Both Route Handlers and Server Components run securely on the server. You don't need the additional network hop. Instead, you can call whatever logic you intended to place inside the Route Handler directly in the Server Component. This might be an external API or any Promise.
-Since this code is running on the server with Node.js, we need to provide the absolute URL for the fetch versus a relative URL. In reality, we wouldn't hardcode localhost here, but instead need to have some conditional check based on the environment we're in. This is unnecessary since you can call the logic directly. -->
 
 ---
 class: direct
@@ -201,14 +193,113 @@ export async function GET() {
 layout: center
 ---
 
-### Understand local vs. production behavior and use dynamic fetching techniques when necessary.
+### Understand local vs. production behavior  
+
+<v-clicks>
+
+  - Local dev handler is always dynamic
+  - Prod will be static unless you access dynamic values
+
+</v-clicks>
+
+--- 
+
+### Opting out of cache:
+
+<div style="margin-bottom: 2rem;"/>
+
+````md magic-move
+```ts
+// This is static
+
+export async function GET() {
+  return Response.json({
+    time: new Date().toLocaleString('en-us', {
+      timeZone: 'Asia/Jerusalem',
+    }),
+  });
+}
+```
+```ts
+// Any method besides GET makes it dynamic
+
+export async function POST() {
+  return Response.json({
+    time: new Date().toLocaleString('en-us', {
+      timeZone: 'Asia/Jerusalem',
+    }),
+  });
+}
+```
+```ts
+// use dynamic functions like cookies
+
+import { cookies } from 'next/headers';
+
+export async function GET() {
+  const cookieStore = cookies()
+  const theme = cookieStore.get('theme')
+  return Response.json({
+      theme
+    }),
+  });
+}
+```
+```ts
+// OR headers
+
+import { headers } from 'next/headers'
+
+export async function GET() {
+  const headersList = headers();
+  const referer = headersList.get('referer');
+  return Response.json({
+      referer
+    }),
+  });
+}
+```
+```ts
+// OR config route segments
+
+// layout.tsx | page.tsx | route.ts
+
+export const dynamic = 'auto'
+export const dynamicParams = true
+export const revalidate = false
+export const fetchCache = 'auto'
+export const runtime = 'nodejs'
+export const preferredRegion = 'auto'
+export const maxDuration = 5
+ 
+export default function MyComponent() {}
+```
+````
+
 
 ---
 layout: center
+transition: fade-out
 ---
 
-## Workaround
+## One more workaround: `no-store`
 
+
+---
+
+```tsx {|4}
+import { unstable_noStore as noStore } from 'next/cache';
+ 
+export default async function Component() {
+  noStore();
+  const result = await db.query(...);
+  ...
+}
+```
+
+<div v-click style="margin-bottom: 2rem;"/>
+
+## <span v-after>* this is still experimental</span>
 
 
 ---
