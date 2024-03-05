@@ -152,20 +152,44 @@ layout: cover
 ---
 
 
-## Route handlers are cached by default, affecting dynamic data fetching.
+## What will happen here?
 
 <div style="margin-bottom: 2rem;" />
 
-```ts
+```ts {|5-7}
 // src/app/api/date/route.ts
+
+export async function GET() {
+  return Response.json({
+    time: new Date().toLocaleString('en-us', {
+      timeZone: 'Asia/Jerusalem',
+    }),
+  });
+}
 ```
-<<< @/../next-js-il-3/src/app/api/data/route.ts.js
+
+<v-click at="2"><a href="http://localhost:3000/api/date" target="_blank">In action</a></v-click at="3">
+
+<div style="margin-bottom: 2rem;" />
+
+### <v-click at="3">Route handlers are cached by default, affecting dynamic data fetching.</v-click>
+
+<!-- 
+Show what happens locally vs prod
+ -->
+
+---
+layout : center
+---
 
 ### Understand local vs. production behavior and use dynamic fetching techniques when necessary.
 
 ---
-
+layout: cover
+---
 # Unnecessary Route Handlers for Client Components
+
+---
 
 ## Misconception that client components require separate route handlers.
 
