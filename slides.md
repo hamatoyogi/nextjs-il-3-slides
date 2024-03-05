@@ -366,6 +366,7 @@ export async function send() {
 
 ---
 class: text-center
+transition: fade-out
 ---
 
 # <a target="_blank" href="http://localhost:3000/use-optimistic">useOptimistic()</a>
@@ -373,14 +374,157 @@ class: text-center
 ## when using server actions
 
 
-
 ---
 
-# Using Suspense Incorrectly
+![Remote Image](https://i.imgflip.com/8i5idd.jpg)
+
+---
+transition: fade-out  
+---
+
+````md magic-move
+```tsx
+async function BlogPosts() {
+  let data = await fetch('https://api.vercel.app/blog');
+  let posts = await data.json();
+
+  return (
+    <ul>
+      {posts.map((post: BlogPost) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default function Page() {
+  return (
+    <section className="w-full text-center pt-10">
+      <h1 className="text-4xl mb-4">Blog Posts</h1>
+      <BlogPosts />
+    </section>
+  );
+}
+```
+```tsx
+import { Suspense } from 'react';
+
+async function BlogPosts() {
+  let data = await fetch('https://api.vercel.app/blog');
+  let posts = await data.json();
+
+  return (
+    <Suspense fallback={<div>loading...</div>}>
+      <ul>
+        {posts.map((post: BlogPost) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </Suspense>
+  );
+}
+
+export default function Page() {
+  return (
+    <section className="w-full text-center pt-10">
+      <h1 className="text-4xl mb-4">Blog Posts</h1>
+      <BlogPosts />
+    </section>
+  );
+}
+```
+````
+
+---
+transition: fade-out
+---
+
+
+![Remote Image](https://i.imgflip.com/8i5m83.jpg)
+
+
+---
+class: text-center
+transition: fade
+--- 
+
+<h1>Right?!</h1>
+
+---
+class: text-center
+--- 
 
 ## Misplacement of Suspense boundaries can lead to rendering issues.
 
-### Place Suspense boundaries correctly to manage loading states and data fetching.
+<h2 v-click><a href="http://localhost:3000/suspense" target="_blank">👀</a></h2>
+
+
+---
+layout: two-cols
+---
+
+````md magic-move
+```tsx
+import { Suspense } from 'react';
+
+async function BlogPosts() {
+  let data = await fetch('https://api.vercel.app/blog');
+  let posts = await data.json();
+
+  return (
+    <Suspense fallback={<div>loading...</div>}>
+      <ul>
+        {posts.map((post: BlogPost) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </Suspense>
+  );
+}
+
+export default function Page() {
+  return (
+    <section>
+      <h1>Blog Posts</h1>
+      <BlogPosts />
+    </section>
+  );
+}
+```
+```tsx
+import { Suspense } from 'react';
+
+async function BlogPosts() {
+  let data = await fetch('https://api.vercel.app/blog');
+  let posts = await data.json();
+
+  return (
+    <ul>
+      {posts.map((post: BlogPost) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default function Page() {
+  return (
+    <section>
+      <h1>Blog Posts</h1>
+      <Suspense fallback={<div>loading...</div>}>
+        <BlogPosts />
+      </Suspense>
+    </section>
+  );
+}
+```
+````
+
+::right::
+
+<div v-after style="height: 100%; display: grid; place-content: center; padding-left: 2rem;">
+<h3>Place Suspense boundaries correctly to manage loading states and data fetching.</h3>
+</div>
 
 ---
 
