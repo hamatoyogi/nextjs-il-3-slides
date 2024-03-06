@@ -816,57 +816,68 @@ export default async function Page() {
 ```
 
 ````
+
+---
+layout: cover
 ---
 
-```tsx{|}
-"use client";
+# Misplaced Redirects in Try/Catch Blocks
 
-import { useFormState, useFormStatus } from "react-dom";
-import { createTodo } from "@/app/actions";
+---
 
-const initialState = {
-  message: "",
-};
+```tsx{|12}
+import { redirect } from 'next/navigation';
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button type="submit" aria-disabled={pending}>
-      Add
-    </button>
-  );
+async function fetchTeam(id) {
+  const res = await fetch('https://...');
+  if (!res.ok) return undefined;
+  return res.json();
 }
 
-export function AddForm() {
-  const [state, formAction] = useFormState(createTodo, initialState);
+export default async function Profile({ params }) {
+  const team = await fetchTeam(params.id);
+  if (!team) {
+    redirect('/login');
+  }
 
+  // ...
+}
+```
+
+--- 
+layout: Two-columns
+---
+
+
+```tsx{|3,7}
+// app/client-redirect.tsx
+
+'use client';
+
+import { navigate } from './actions';
+
+export function ClientRedirect() {
   return (
-    <form action={formAction}>
-      <label htmlFor="todo">Enter Task</label>
-      <input type="text" id="todo" name="todo" required />
-      <SubmitButton />
-      <p aria-live="polite" className="sr-only" role="status">
-        {state?.message}
-      </p>
+    <form action={navigate}>
+      <input type="text" name="id" />
+      <button>Submit</button>
     </form>
   );
 }
 ```
 
----
+```tsx{|8}
+// app/actions
 
-## Data inconsistencies after mutations due to lack of revalidation.
+'use server';
 
-### Use caching strategies and revalidation techniques to ensure data consistency.
+import { redirect } from 'next/navigation';
 
----
+export async function navigate(data: FormData) {
+  redirect('/posts');
+}
+```
 
-# Misplaced Redirects in Try/Catch Blocks
-
-## Incorrect handling of redirects within try/catch blocks leading to errors.
-
-### Place redirects appropriately to avoid catching redirect errors unintentionally.
 
 ---
 
