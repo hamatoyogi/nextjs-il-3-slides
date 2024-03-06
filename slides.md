@@ -3,7 +3,8 @@ theme: seriph
 background: https://source.unsplash.com/collection/94734566/1920x1080
 class: text-center
 highlighter: shiki
-lineNumbers: false
+# lineNumbers: false
+lineNumbers: true
 drawings:
   persist: false
 defaults:
@@ -567,18 +568,293 @@ export default function Page() {
 
 
 ---
+class: weave
+layout: center
+---
 
 # Context Providers and Component Weaving
 
----
-
-## Confusion over where to place context providers and how server and client components interleave.
-
-### Proper placement of context providers and understanding the relationship between server and client components.
+<img v-click src="https://1.bp.blogspot.com/-6FAZ8LiW-58/VqffUx_roxI/AAAAAAAAYHo/G7ItN6BGdJw/s1600/IMG_7648.JPG" style="height: 80vh; margin: auto;">
 
 ---
+
+```tsx 
+// app/theme-provider.tsx
+
+'use client';
+
+import { createContext } from 'react';
+
+export const ThemeContext = createContext({});
+
+export default function ThemeProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <ThemeContext.Provider value="dark">{children}</ThemeContext.Provider>;
+}
+```
+
+---
+
+```tsx
+// app/layout.tsx
+
+import ThemeProvider from './theme-provider';
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+---
+
+# How to combine? 
+
+---
+
+## Server component
+
+<div style="margin-bottom: 2rem;"></div>
+
+```tsx 
+// app/page.tsx
+
+export default function Page() {
+  return (
+    <section>
+      <h1>My Page</h1>
+    </section>
+  );
+}
+```
+
+---
+---
+
+## Client component
+
+<div style="margin-bottom: 2rem;"></div>
+
+```tsx {|3|8}
+// app/counter.tsx
+
+'use client';
+
+import { useState } from 'react';
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+}
+```
+
+---
+
+
+````md magic-move
+```tsx 
+// app/page.tsx
+
+export default function Page() {
+  return (
+    <section>
+      <h1>My Page</h1>
+    </section>
+  );
+}
+```
+```tsx 
+// app/page.tsx
+
+export default function Page() {
+
+  return (
+    <section>
+      <h1>My Page</h1>
+      <Counter />
+    </section>
+  );
+}
+```
+```tsx
+import { Counter } from './counter';
+
+function Message() {
+  return <p>This is a Server Component</p>;
+}
+
+export default function Page() {
+  return (
+    <section>
+      <h1>My Page</h1>
+      <Counter>
+        <Message />
+      </Counter>
+    </section>
+  );
+}
+```
+```tsx
+// app/counter.tsx
+
+'use client';
+
+import { useState } from 'react';
+
+export function Counter({ children }: { children: React.ReactNode }) {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      {children}
+    </div>
+  );
+}
+```
+
+````
+
+---
+
+# Don't “use client” unnecessarily
+
+---
+
 
 # Forgetting to Revalidate Data After Mutations
+
+---
+transition: none
+---
+
+```tsx{|2-7}
+export default function Page() {
+  async function create(formData: FormData) {
+    'use server';
+
+    let name = formData.get('name');
+    await sql`INSERT INTO users (name) VALUES (${name})`;
+  }
+
+  return (
+    <form action={create}>
+      <input name="name" type="text" />
+      <button type="submit">Create</button>
+    </form>
+  );
+}
+```
+
+
+---
+
+````md magic-move
+```tsx{|2-7}
+export default function Page() {
+  async function create(formData: FormData) {
+    'use server';
+
+    let name = formData.get('name');
+    await sql`INSERT INTO users (name) VALUES (${name})`;
+  }
+
+  return (
+    <form action={create}>
+      <input name="name" type="text" />
+      <button type="submit">Create</button>
+    </form>
+  );
+}
+```
+```tsx
+import { revalidatePath } from 'next/cache';
+
+export default async function Page() {
+  let names = await sql`SELECT * FROM users`;
+
+  async function create(formData: FormData) {
+    'use server';
+
+    let name = formData.get('name');
+    await sql`INSERT INTO users (name) VALUES (${name})`;
+
+    revalidatePath('/');
+  }
+
+  return (
+    <section>
+      <form action={create}>
+        <input name="name" type="text" />
+        <button type="submit">Create</button>
+      </form>
+      <ul>
+        {names.map((name) => (
+          <li>{name}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+```
+
+````
+---
+
+```tsx{|}
+"use client";
+
+import { useFormState, useFormStatus } from "react-dom";
+import { createTodo } from "@/app/actions";
+
+const initialState = {
+  message: "",
+};
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button type="submit" aria-disabled={pending}>
+      Add
+    </button>
+  );
+}
+
+export function AddForm() {
+  const [state, formAction] = useFormState(createTodo, initialState);
+
+  return (
+    <form action={formAction}>
+      <label htmlFor="todo">Enter Task</label>
+      <input type="text" id="todo" name="todo" required />
+      <SubmitButton />
+      <p aria-live="polite" className="sr-only" role="status">
+        {state?.message}
+      </p>
+    </form>
+  );
+}
+```
+
+---
 
 ## Data inconsistencies after mutations due to lack of revalidation.
 
