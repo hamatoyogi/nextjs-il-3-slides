@@ -856,7 +856,7 @@ export default async function Page() {
 layout: cover
 ---
 
-# Misplaced Redirects in Try/Catch Blocks
+# Misplaced Redirects
 
 ---
 
@@ -878,6 +878,8 @@ export default async function Profile({ params }) {
   // ...
 }
 ```
+
+<!-- Don't return "redirect" -->
 
 --- 
 layout: full
@@ -916,17 +918,37 @@ export async function navigate(data: FormData) {
 
 ---
 
+
 # Recap
 
 <v-clicks>
   
-  - 
+  - Avoid unnecessary API calls in RSCs
+  - Call things directly
+  - Static Route handlers are cached by default
+  - Behavior differs between dev / prod
+  - Cache opt out methods
+  - Handle form submissions with server actions
+  - Put Suspense boundries in the right place
+  - Remember what each page / route handler can access from a request
+  - Learn how to knit server and client components
+  - Don't “use client” unnecessarily
+  - Revalidate data after mutations
+  - Make sure to put redirects in the right place
 
 </v-clicks>
 
 ---
+layout: end
+---
 
-# Conclusion
+# Thank you!
 
-Recap of common mistakes and best practices to improve Next.js applications.
-Encourage continuous learning and adaptation of best practices in Next.js development.
+<div class="my-10 grid w-min gap-y-4" style="grid-template-columns: 40px 1fr;">
+  <svg class="slidev-icon opacity-50" viewBox="0 0 24 24" width="1.2em" height="1.2em"><path fill="currentColor" d="M5.884 18.653c-.3-.2-.558-.455-.86-.816a50.59 50.59 0 0 1-.466-.579c-.463-.575-.755-.841-1.056-.95a1 1 0 1 1 .675-1.882c.752.27 1.261.735 1.947 1.588c-.094-.117.34.427.433.539c.19.227.33.365.44.438c.204.137.588.196 1.15.14c.024-.382.094-.753.202-1.095c-2.968-.726-4.648-2.64-4.648-6.396c0-1.24.37-2.356 1.058-3.292c-.218-.894-.185-1.975.302-3.192a1 1 0 0 1 .63-.582c.081-.024.127-.035.208-.047c.803-.124 1.937.17 3.415 1.096a11.73 11.73 0 0 1 2.687-.308c.912 0 1.819.104 2.684.308c1.477-.933 2.614-1.227 3.422-1.096c.085.013.158.03.218.05a1 1 0 0 1 .616.58c.487 1.216.52 2.296.302 3.19c.691.936 1.058 2.045 1.058 3.293c0 3.757-1.674 5.665-4.642 6.392c.125.415.19.878.19 1.38c0 .665-.002 1.299-.007 2.01c0 .19-.002.394-.005.706a1 1 0 0 1-.018 1.958c-1.14.227-1.984-.532-1.984-1.525l.002-.447l.005-.705c.005-.707.008-1.337.008-1.997c0-.697-.184-1.152-.426-1.361c-.661-.57-.326-1.654.541-1.751c2.966-.333 4.336-1.482 4.336-4.66c0-.955-.312-1.744-.913-2.404A1 1 0 0 1 17.2 6.19c.166-.414.236-.957.095-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 0 1-.833.135a9.626 9.626 0 0 0-2.592-.349c-.89 0-1.772.118-2.592.35a1 1 0 0 1-.829-.134c-.753-.507-1.374-.807-1.87-.947c-.143.653-.072 1.194.093 1.607a1 1 0 0 1-.189 1.045c-.597.655-.913 1.458-.913 2.404c0 3.172 1.371 4.328 4.322 4.66c.865.097 1.202 1.177.545 1.748c-.193.168-.43.732-.43 1.364v3.15c0 .985-.834 1.725-1.96 1.528a1 1 0 0 1-.04-1.962v-.99c-.91.061-1.661-.088-2.254-.485"></path></svg>
+  <div><a href="https://github.com/hamatoyogi" target="_blank">hamatoyogi</a></div>
+  <svg class="slidev-icon opacity-50" viewBox="0 0 24 24" width="1.2em" height="1.2em"><path fill="currentColor" d="M15.35 5.55a2.9 2.9 0 0 0-2.9 2.847l-.028 1.575a.6.6 0 0 1-.68.583l-1.562-.212c-2.053-.28-4.021-1.226-5.91-2.799c-.597 3.31.57 5.603 3.383 7.372L9.4 16.014a.6.6 0 0 1 .035.993L7.843 18.17c.947.059 1.846.017 2.592-.131c4.718-.942 7.855-4.492 7.855-10.348c0-.478-1.013-2.141-2.94-2.141m-4.9 2.81a4.9 4.9 0 0 1 8.385-3.355c.711-.005 1.316.175 2.668-.645c-.334 1.64-.5 2.352-1.213 3.331c0 7.642-4.697 11.358-9.464 12.309c-3.267.652-8.02-.419-9.38-1.841c.693-.054 3.513-.357 5.143-1.55c-1.38-.91-6.868-4.14-3.261-12.823c1.693 1.977 3.41 3.323 5.15 4.037c1.157.475 1.442.466 1.973.538"></path></svg>
+  <div><a href="https://twitter.com/hamatoyogi" target="_blank">hamatoyogi</a></div>
+  <svg class="slidev-icon opacity-50" viewBox="0 0 24 24" width="1.2em" height="1.2em"><path fill="currentColor" d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5zm-8-9a6 6 0 1 1 0-12a6 6 0 0 1 0 12m0-2a4 4 0 1 0 0-8a4 4 0 0 0 0 8"></path></svg>
+  <div><a href="https://hamatoyogi.dev" target="_blank">hamatoyogi.dev</a></div>
+</div>
