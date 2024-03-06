@@ -736,8 +736,8 @@ export function Counter({ children }: { children: React.ReactNode }) {
 
 ---
 
+# Forgetting to revalidate data after mutations
 
-# Forgetting to Revalidate Data After Mutations
 
 ---
 transition: none
