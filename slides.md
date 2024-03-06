@@ -52,7 +52,7 @@ layout: 'intro'
   <div><a href="https://hamatoyogi.dev" target="_blank">hamatoyogi.dev</a></div>
 </div>
 
-<img src="profile-pic.png" class="rounded-full bg-white w-40 abs-tr mt-16 mr-12"/>
+<img src="/profile-pic.png" class="rounded-full bg-white w-40 abs-tr mt-16 mr-12"/>
 
 
 ---
