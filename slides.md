@@ -3,8 +3,7 @@ theme: seriph
 background: https://source.unsplash.com/collection/94734566/1920x1080
 class: text-center
 highlighter: shiki
-# lineNumbers: false
-lineNumbers: true
+lineNumbers: false
 drawings:
   persist: false
 defaults:
@@ -198,7 +197,7 @@ layout: center
 
 </v-clicks>
 
---- 
+---
 
 ### Opting out of cache:
 
@@ -845,7 +844,7 @@ export default async function Profile({ params }) {
 ```
 
 --- 
-layout: Two-columns
+layout: full
 ---
 
 
