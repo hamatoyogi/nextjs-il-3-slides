@@ -6,6 +6,7 @@ drawings:
   persist: false
 defaults:
   layout: center
+download: true
 transition: slide-left
 title: Welcome to Next.js IL 3!
 mdc: true
@@ -38,9 +39,9 @@ layout: 'intro'
 # Yoav Ganbar
 
 <div class="leading-8 opacity-80">
- DevRel & DX @ Builder.io<br>
  Father of 2.<br>
  Web dude, content creator & host of FedBites podcast.<br>
+ DevRel & DX @ Builder.io<br>
 </div>
 
 <div class="my-10 grid w-min gap-y-4" style="grid-template-columns: 40px 1fr;">
@@ -332,6 +333,9 @@ export default async function Component() {
 
 ## <span v-after>* this is still experimental</span>
 
+<!--
+In the future with Partial Prerendering, this pattern will start to become more common, including defining which components should be prerendered and which should run on-demand.
+-->
 
 ---
 layout: cover
@@ -341,7 +345,7 @@ layout: cover
 ---
 
 ## <span v-click.hide at="1"> Client components don't need separate route handlers.</span>
-## <span v-click at="1">Use server actions for form submissions and interactions in client components.</span>
+## <span v-click at="1">Use server actions for form submissions</span>
 
 <div style="margin-bottom: 2rem;"/>
 
@@ -486,7 +490,7 @@ class: text-center
 
 ## Misplacement of Suspense boundaries can lead to rendering issues.
 
-<h2 v-click><a href="http://localhost:3000/suspense" target="_blank">👀</a></h2>
+<h2 v-click><a href="http://localhost:3000/suspense/before" target="_blank">👀</a></h2>
 
 
 ---
@@ -604,11 +608,11 @@ export default function Page() {
 
 ---
 class: weave
-layout: center
+layout: none
 ---
-
-# Context Providers and Component Weaving
-
+<div style="display: grid; place-content: center;">
+  <h1>Context Providers and Component Weaving</h1>
+</div>
 <img v-click src="https://1.bp.blogspot.com/-6FAZ8LiW-58/VqffUx_roxI/AAAAAAAAYHo/G7ItN6BGdJw/s1600/IMG_7648.JPG" style="height: 80vh; margin: auto;">
 
 ---
@@ -801,7 +805,7 @@ export default function Page() {
 ---
 
 ````md magic-move
-```tsx{|2-7}
+```tsx
 export default function Page() {
   async function create(formData: FormData) {
     'use server';
@@ -817,6 +821,33 @@ export default function Page() {
     </form>
   );
 }
+```
+```tsx
+export default async function Page() {
+  let names = await sql`SELECT * FROM users`;
+
+  async function create(formData: FormData) {
+    'use server';
+
+    let name = formData.get('name');
+    await sql`INSERT INTO users (name) VALUES (${name})`;
+  }
+
+  return (
+    <section>
+      <form action={create}>
+        <input name="name" type="text" />
+        <button type="submit">Create</button>
+      </form>
+      <ul>
+        {names.map((name) => (
+          <li>{name}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 ```
 ```tsx
 import { revalidatePath } from 'next/cache';
